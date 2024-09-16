@@ -36,6 +36,7 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 public class JMainWindow extends JFrame {
 
@@ -52,6 +53,8 @@ public class JMainWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 350, 292);
 		contentPane = new JPanel();
+		contentPane.setForeground(new Color(255, 255, 255));
+		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
@@ -86,6 +89,9 @@ public class JMainWindow extends JFrame {
 		rdbtnNewRadioButton_1.setBounds(18, 142, 141, 23);
 		contentPane.add(rdbtnNewRadioButton_1);
 		
+		JProgressBar progressBar = new JProgressBar();
+		progressBar.setBounds(6, 213, 338, 20);
+		contentPane.add(progressBar);
 		
 		JLabel lblNewLabel_2 = new JLabel("no file selected yet...");
 		lblNewLabel_2.setBounds(6, 242, 338, 16);
@@ -116,10 +122,14 @@ public class JMainWindow extends JFrame {
 				    extension = Main.bankOrPresetPath.getName().substring(i+1).toString();
 				}
 				
+				progressBar.setValue(10);
+				
 				if(extension.matches("vital")) {
 					System.out.println("test");
 					lblNewLabel_2.setText(".vital file, no extraction needed!");
+					progressBar.setValue(30);
 				} else if(extension.matches("vitalbank")) {
+					progressBar.setValue(20);
 					lblNewLabel_2.setText(".vitalbank file, starting extraction.");
 					selectExportDir();
 					new File(Main.workingDirectory.getAbsoluteFile() + "/vitaldowngradertemp").mkdirs();
@@ -157,16 +167,21 @@ public class JMainWindow extends JFrame {
 				        }
 				        zis.closeEntry();
 				        zis.close();
+						progressBar.setValue(50);
+				        lblNewLabel_2.setText("extracted! converting files!");
 				        
 				        
 				        Stream<Path> path = Files.walk(Paths.get(destDir.getAbsolutePath()));
 				        path = path.filter(var -> var.toString().endsWith(".vital"));
-				        path.forEach((v) -> convertVitalFile(v.toAbsolutePath().toString()));      
+				        path.forEach((v) -> { convertVitalFile(v.toAbsolutePath().toString()); lblNewLabel_2.setText("working on file " + v.toAbsolutePath().getFileName());});      
 					FileUtils.deleteDirectory(new File(tempFolder.getAbsolutePath()));
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+					
+			        lblNewLabel_2.setText("finished! ^w^");
+					progressBar.setValue(100);
 				} else {
 					
 				}
@@ -175,10 +190,6 @@ public class JMainWindow extends JFrame {
 		});
 		btnDowngrade.setBounds(182, 184, 162, 29);
 		contentPane.add(btnDowngrade);
-		
-		JProgressBar progressBar = new JProgressBar();
-		progressBar.setBounds(6, 213, 338, 20);
-		contentPane.add(progressBar);
 		
 	}
 	
