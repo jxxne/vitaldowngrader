@@ -12,6 +12,8 @@ import org.apache.commons.io.FileUtils;
 import uk.co.jxxne.vitaldowngrader.Main;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JRadioButton;
@@ -43,6 +45,8 @@ public class JMainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	public static Path tempDirectory;
+	
+	public int filesEdited = 0;
 	
 	/**
 	 * Create the frame.
@@ -112,7 +116,7 @@ public class JMainWindow extends JFrame {
 		JButton btnDowngrade = new JButton("downgrade!!11!");
 		btnDowngrade.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				filesEdited = 0;
 				
 				lblNewLabel_2.setText("checking filetype");
 				String extension = "";
@@ -128,6 +132,15 @@ public class JMainWindow extends JFrame {
 					System.out.println("test");
 					lblNewLabel_2.setText(".vital file, no extraction needed!");
 					progressBar.setValue(30);
+					selectExportDir();
+					lblNewLabel_2.setText("working on file " + Main.bankOrPresetPath.getAbsolutePath());     
+					progressBar.setValue(50);
+					convertVitalFile(Main.bankOrPresetPath.getAbsolutePath()); 
+			        lblNewLabel_2.setText("finished! ^w^");
+					progressBar.setValue(100);
+			        JOptionPane.showMessageDialog(contentPane,"downgraded " + filesEdited + " files mroww meoww :333");
+
+					
 				} else if(extension.matches("vitalbank")) {
 					progressBar.setValue(20);
 					lblNewLabel_2.setText(".vitalbank file, starting extraction.");
@@ -182,6 +195,7 @@ public class JMainWindow extends JFrame {
 					
 			        lblNewLabel_2.setText("finished! ^w^");
 					progressBar.setValue(100);
+			        JOptionPane.showMessageDialog(contentPane,"downgraded " + filesEdited + " files mroww meoww :333");
 				} else {
 					
 				}
@@ -205,6 +219,7 @@ public class JMainWindow extends JFrame {
 			editedFile.createNewFile();
 			FileUtils.write(editedFile, data);
 			System.out.println("finished file " + path + ", now at " + editedFile.getAbsolutePath());
+			filesEdited++;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

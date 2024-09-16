@@ -9,11 +9,12 @@ The reason for this existing comes from my college Music Technology course using
 **Features:**
 - Convert from 1.5.5 (latest early access i thikn) to 1.0.7 (latest stable as of writing)
 - Supports .vitalbank files
+- .vital support
+- Progress Bar (kinda)
+
 
 **To Do:**
-- .vital support
 - Multi version support
-- Progress Bar
 - Error handling
 - Better Efficiency
 - Option to convert back to .vitalbank
